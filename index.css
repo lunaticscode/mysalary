@@ -1,6 +1,9 @@
+@import url("https://fonts.googleapis.com/css?family=Black+Han+Sans:400");
+
 body {
   margin: 0px;
   padding: 0px;
+  font-family: sans-serif !important;
 }
 :root {
   --main-primary-color: rgb(48, 140, 253);
