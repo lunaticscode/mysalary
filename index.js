@@ -238,3 +238,5 @@ salaryInputElem.addEventListener("keyup", ({ target }) => {
   const formatedStringValue = intValue.toLocaleString("ko-KR");
   salaryInputElem.value = formatedStringValue;
 });
+
+renderingResult(0);
