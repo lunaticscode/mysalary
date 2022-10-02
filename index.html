@@ -10,10 +10,10 @@
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://mysalary2022.vercel.app" />
     <meta property="og:title" content="간편 연봉계산기" />
-    <meta
+    <!-- <meta
       property="og:image"
       content="https://mysalary2022.vercel.app/asset/mysalary-icon.png"
-    />
+    /> -->
     <meta property="og:description" content="2022 간편 연봉계산기" />
     <meta property="og:site_name" content="2022 간편 연봉계산기" />
     <meta property="og:locale" content="ko_KR" />
@@ -24,23 +24,50 @@
   </head>
   <body>
     <header>MYSALARY <span>(ver.2022)</span></header>
-    <body>
-      <div id="section-wrapper">
+
+    <main>
+      <div class="section-wrapper output">
         <section id="app-user-input-section">
           <span>연봉</span>
           <div id="salary-input-wrapper">
             <input id="salary-input" type="text" placeholder="연봉 입력" />
           </div>
           <span>원</span>
+          <div id="familycnt-wrapper">
+            <div>부양가족수</div>
+            <div id="familycnt-plus-btn">+</div>
+            <div id="familycnt-value">1</div>
+            <div id="familycnt-minus-btn">-</div>
+          </div>
         </section>
+
         <section id="app-result-section"></section>
       </div>
-      <script
-        async
-        src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3018827637832298"
-        crossorigin="anonymous"
-      ></script>
-    </body>
+      <div class="section-wrapper desc">
+        <section>
+          <div class="output-desc-box gray">
+            <span class="emphasis">*</span> 비과세액은 100,000원으로 계산.
+          </div>
+          <div class="output-desc-box gray">
+            <span class="emphasis">*</span> 국민연금료는 최대 248,850원 (월
+            5,553,000원 * 4.5%)
+          </div>
+          <div class="output-desc-box" style="display: grid">
+            <span
+              ><span class="emphasis">*</span> 부양가족에 따른 간이소득세표
+              (근로소득세 참고자료)</span
+            >
+            <div id="incometax-table-wrapper"></div>
+          </div>
+        </section>
+      </div>
+    </main>
+    <script
+      async
+      src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3018827637832298"
+      crossorigin="anonymous"
+    ></script>
+
     <footer></footer>
   </body>
 </html>

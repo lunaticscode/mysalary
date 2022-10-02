@@ -14,6 +14,10 @@ body {
   --main-substract-trans-color: rgba(211, 53, 83, 0.1);
   --main-substract-medium-trans-color: rgba(211, 53, 83, 0.5);
 }
+span.emphasis {
+  color: var(--main-primary-color);
+}
+
 header {
   display: block;
   padding: 15px 0px;
@@ -31,14 +35,54 @@ header > span {
   font-weight: initial;
   color: #eeeeee;
 }
-
-#section-wrapper {
-  text-align: center;
-}
-
 section {
   margin-top: 25px;
   padding: 15px;
+}
+main {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+.section-wrapper {
+  text-align: center;
+}
+.section-wrapper.desc {
+  width: 100%;
+}
+#familycnt-wrapper {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: -10px;
+}
+#familycnt-wrapper > div {
+  display: inline-block;
+}
+#familycnt-wrapper > div:first-of-type {
+  margin-right: 10px;
+  font-weight: bold;
+}
+#familycnt-plus-btn,
+#familycnt-minus-btn {
+  background-color: #eeeeee;
+  text-align: center;
+  cursor: pointer;
+  width: 20px;
+  height: 20px;
+  border-radius: 20px;
+  vertical-align: middle;
+  font-size: 20px;
+}
+#familycnt-plus-btn {
+  margin-right: 10px;
+}
+#familycnt-minus-btn {
+  margin-left: 10px;
+}
+#familycnt-plus-btn:hover,
+#familycnt-minus-btn:hover {
+  background-color: var(--main-primary-medium-trans-color);
 }
 
 #salary-input-wrapper {
@@ -79,7 +123,8 @@ section {
 }
 
 #app-result-section {
-  width: 700px;
+  width: 95%;
+  margin: 0px 2.5%;
   display: inline-block;
 }
 
@@ -225,12 +270,68 @@ section {
 .result-salary-value > span {
   color: gray;
 }
+
+.output-desc-box {
+  text-align: left;
+  padding: 5px;
+  font-size: 15px;
+  color: gray;
+}
+#incometax-table-wrapper {
+  margin-top: 15px;
+  min-height: 300px;
+  height: 60vh;
+  padding: 10px;
+  position: relative;
+  overflow: auto;
+}
+.incometax-table-header {
+  z-index: 100 !important;
+  display: grid;
+  grid-template-columns: 180px max-content;
+  height: 30px;
+  line-height: 30px;
+  background-color: white;
+  width: 100%;
+}
+.incometax-table-header > div {
+  display: inline-block;
+}
+.incometax-table-header-cell {
+  padding: 0px 5px;
+}
+.incometax-table-body {
+  /* margin-top: 30px; */
+  position: absolute;
+}
+.incometax-table-row {
+  display: grid;
+  grid-template-columns: 180px 80px 80px 80px 80px 80px 80px 80px 80px 80px 80px 80px;
+}
+.incometax-table-row-cell {
+  display: inline-block;
+  border-top: 1px solid #eeeeee;
+  border-right: 1px solid #eeeeee;
+  padding: 5px;
+  color: silver;
+}
+.incometax-table-row-cell:first-of-type {
+  color: black;
+}
+
 @media screen and (max-width: 700px) {
   section {
     padding: 15px 0px;
   }
+  main {
+    display: initial;
+  }
+  .section-wrapper.desc {
+    display: none;
+  }
   #app-result-section {
     width: 90%;
+    margin-left: initial;
   }
   .result-item-wrapper {
     width: calc(100% - 20px);
@@ -244,5 +345,12 @@ section {
   }
   .result-item-value {
     margin-right: 10px;
+  }
+}
+
+@media screen and (min-width: 1300px) {
+  main {
+    display: grid;
+    grid-template-columns: 700px auto;
   }
 }

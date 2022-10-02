@@ -1648,3 +1648,7 @@ const MAP_INCOME_TO_TAX_LIST = {
 };
 
 const SALARY_VALUE_LIST = Object.keys(MAP_INCOME_TO_TAX_LIST);
+const TAX_VALUE_LIST = Object.values(MAP_INCOME_TO_TAX_LIST);
+const SALARY_VALUE_RANGE_LIST = SALARY_VALUE_LIST.map(
+  (sal, idx, arr) => idx > 0 && [arr[idx - 1], sal]
+).slice(1, SALARY_VALUE_LIST.length);

@@ -1,7 +1,11 @@
 const SELECTOR = {
   SALARY_INPUT: "#salary-input",
   SALARY_INPUT_WRAPPER: "#salary-input-wrapper",
+  FAMILYCNT_VALUE: "#familycnt-value",
+  FAMILYCNT_PLUS_BUTTON: "#familycnt-plus-btn",
+  FAMILYCNT_MINUS_BUTTON: "#familycnt-minus-btn",
   RESULT_SECTION: "#app-result-section",
+  INCOMETAX_TABLE_WRAPPER: "#incometax-table-wrapper",
 };
 const TAX_RATIO = {
   PUBLIC_PENSION: 4.5 / 100,
@@ -27,13 +31,51 @@ const getIncomeTax = (salary, familyCnt = 1) => {
       SALARY_VALUE_LIST.findIndex((val) => salary / 12 < val) - 1
     ];
   if (salarySectionMinValue) {
-    console.log(salarySectionMinValue);
     const incomeTax =
       MAP_INCOME_TO_TAX_LIST[salarySectionMinValue][familyCnt - 1];
-    console.log(incomeTax);
     return { value: incomeTax * 12 };
   }
   return { value: 0 };
+};
+
+const incomeTaxTableWrapper = document.querySelector(
+  SELECTOR.INCOMETAX_TABLE_WRAPPER
+);
+
+const renderingIncomeTaxTable = () => {
+  const tableHeaderElem = document.createElement("div");
+  tableHeaderElem.setAttribute("class", "incometax-table-header");
+  const tableHeaderContent = `
+    <div class='incometax-table-header-cell'>월급여액 - 비과세액 (원)</div>
+    <div class='incometax-table-header-cell'>부양(공제대상)가족 수에 따른 소득세 (원)</div>
+  `;
+  tableHeaderElem.innerHTML = tableHeaderContent;
+  incomeTaxTableWrapper.append(tableHeaderElem);
+
+  const tableBodyElem = document.createElement("div");
+  tableBodyElem.setAttribute("class", "incometax-table-body");
+  let tableRowContents = ``;
+  for (let i = 0; i < SALARY_VALUE_RANGE_LIST.length; i++) {
+    const tableBodyRowElem = document.createElement("div");
+    tableBodyRowElem.setAttribute("class", "incometax-table-row");
+    let taxContents = "";
+    taxContents =
+      taxContents +
+      `<div class='incometax-table-row-cell' data='${SALARY_VALUE_RANGE_LIST[
+        i
+      ].join("-")}'>${SALARY_VALUE_RANGE_LIST[i]
+        .map((sal) => Number(sal).toLocaleString())
+        .join(" ~ ")}</div>`;
+    TAX_VALUE_LIST[i].forEach((tax) => {
+      taxContents =
+        taxContents +
+        `<div class='incometax-table-row-cell'>${tax.toLocaleString()}</div>`;
+    });
+    tableBodyRowElem.innerHTML = taxContents;
+    tableBodyElem.append(tableBodyRowElem);
+  }
+  // tableBodyElem.innerHTML = tableRowContents;
+  incomeTaxTableWrapper.append(tableBodyElem);
 };
 
 const getOverIncomeTax = (salary, familyCnt = 1) => {
@@ -64,7 +106,7 @@ const getOverIncomeTax = (salary, familyCnt = 1) => {
   return overIncomeTax * 12;
 };
 
-const getSubtractValues = (salary) => {
+const getSubtractValues = (salary, familyCnt = 1) => {
   const resultArr = [];
   const targetSalary = salary - FIX_NONE_TAX;
   for (let key in TAX_RATIO) {
@@ -103,9 +145,9 @@ const getSubtractValues = (salary) => {
 
   let incomeTaxValue;
   if (targetSalary / 12 > OVER_TAX_INCOME) {
-    incomeTaxValue = getOverIncomeTax(targetSalary / 12);
+    incomeTaxValue = getOverIncomeTax(targetSalary / 12, familyCnt || 1);
   } else {
-    const { value } = getIncomeTax(targetSalary);
+    const { value } = getIncomeTax(targetSalary, familyCnt || 1);
     incomeTaxValue = value;
   }
   resultArr.push({
@@ -127,8 +169,8 @@ const getSubtractValues = (salary) => {
   });
 };
 
-const renderingResult = (salary) => {
-  const substractValueList = getSubtractValues(salary);
+const renderingResult = (salary, familyCnt = 1) => {
+  const substractValueList = getSubtractValues(salary, familyCnt);
   const resultSectionElem = document.querySelector(SELECTOR.RESULT_SECTION);
   resultSectionElem.innerHTML = "";
   const fragElem = document.createDocumentFragment();
@@ -218,8 +260,7 @@ const salaryInputElem = document.querySelector(SELECTOR.SALARY_INPUT);
 const salaryInputWrapperElem = document.querySelector(
   SELECTOR.SALARY_INPUT_WRAPPER
 );
-
-salaryInputElem.addEventListener("keyup", ({ target }) => {
+const handleChangeSalaryInput = (target) => {
   if (!target) return;
   const { value: inputValue } = target;
 
@@ -237,6 +278,42 @@ salaryInputElem.addEventListener("keyup", ({ target }) => {
   renderingResult(intValue);
   const formatedStringValue = intValue.toLocaleString("ko-KR");
   salaryInputElem.value = formatedStringValue;
-});
+};
+salaryInputElem.addEventListener("keyup", ({ target }) =>
+  handleChangeSalaryInput(target)
+);
+salaryInputElem.addEventListener("change", ({ target }) =>
+  handleChangeSalaryInput(target)
+);
 
-renderingResult(0);
+const familycntValueElem = document.querySelector(SELECTOR.FAMILYCNT_VALUE);
+const familycntPlusBtnElem = document.querySelector(
+  SELECTOR.FAMILYCNT_PLUS_BUTTON
+);
+const familycntMinusBtnElem = document.querySelector(
+  SELECTOR.FAMILYCNT_MINUS_BUTTON
+);
+
+const handleChangeFamilycntInput = (familycnt) => {
+  const salary =
+    Number(salaryInputElem.value.replace(/[^0-9]/gi, "").replaceAll(",", "")) ||
+    0;
+  renderingResult(salary, familycnt);
+};
+const handleClickFamilycntControllBtn = (direction) => {
+  const prevValue = Number(familycntValueElem.innerHTML) || 1;
+  const resultValue = prevValue + direction;
+  if (!resultValue || resultValue > 10) return;
+  familycntValueElem.innerHTML = resultValue;
+  handleChangeFamilycntInput(resultValue);
+};
+familycntPlusBtnElem.addEventListener("click", () =>
+  handleClickFamilycntControllBtn(1)
+);
+familycntMinusBtnElem.addEventListener("click", () =>
+  handleClickFamilycntControllBtn(-1)
+);
+salaryInputElem.value = "28,000,000";
+
+renderingResult(28000000);
+renderingIncomeTaxTable();
